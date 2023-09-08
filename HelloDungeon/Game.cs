@@ -72,7 +72,7 @@ namespace HelloDungeon
             input = "";
 
             //Loop until the player gets the riddle right or they run out of tries
-
+            for (int i = 0; i < numberOfAttempts; i--)
 
             //Draws monkey character 
             Console.WriteLine("     __\n" +
@@ -121,23 +121,55 @@ namespace HelloDungeon
             if (health <= 0)
             {
                 //...update the player state and print player feedback to the screen
-                playerIsAlive = false;
+                
                 Console.WriteLine("You died...");
                 Console.ReadKey(true);
+                playerIsAlive = false;
                 Console.Clear();
             }
         }
 
+        void GetInput(string description, string option1, string option2)
+        {
+            string input = "";
+            
+
+            //While input is not 1 or 2 display the options
+            while (input != "1" && input != "2")
+            {
+                //Print options
+                Console.WriteLine(description);
+                Console.WriteLine("1. " + option1);
+                Console.WriteLine("2. " + option2);
+                Console.Write("> ");
+
+                //Get input from player
+                input = Console.ReadLine();
+
+                //If neither are true...
+                if (input != "1" && input != "2")
+                {
+                    //...display error message
+                    Console.WriteLine("Invalid Input");
+                    Console.WriteLine("press any key to continue");
+                    Console.ReadKey(true);
+                }
+
+                Console.Clear();
+            }
+
+           
+        }
         /// <summary>
         /// Prints the menu for restarting or exiting the game
         /// </summary>
         void DisplayMainMenu()
         {
             //Display question and store input
-            string GetInput (string prompt, string option1, string option2);
+            GetInput ("Would you like to play again?", "1. Yes", "2. No");
 
             //If the player decides to restart...
-            if (input == 1)
+            if (input == "1")
             {
                 //...set their current area to be the start and update the player state to be alive
                 currentArea = 1;
@@ -145,11 +177,13 @@ namespace HelloDungeon
                 playerIsAlive = true;
             }
             //Otherwise if the player wants to quit...
-            else if (input == 2)
+            else if (input == "2")
             {
                 //...set game over to be true
                 gameOver = true;
             }
+
+            
         }
 
         /// <summary>
@@ -158,7 +192,7 @@ namespace HelloDungeon
         void Room3()
         {
             Console.Clear();
-            Console.WriteLine("You've reached the end of your journey!")
+            Console.WriteLine("You've reached the end of your journey!");
         }
 
 
@@ -169,48 +203,7 @@ namespace HelloDungeon
         /// <param name="option1">The first option the player can choose</param>
         /// <param name="option2">The second option the player can choose</param>
         /// <returns></returns>
-        void GetInput(string description, string option1, string option2)
-        {
-            string input = "";
-            int inputReceived = 0;
-
-            //While input is not 1 or 2 display the options
-            while (!(inputReceived == 1 && inputReceived == 2))
-            {
-                //Print options
-                Console.Write(description);
-                Console.Write("1. " + option1);
-                Console.Write("2. " + option2);
-                Console.Write("> ");
-
-                //Get input from player
-                input = Console.ReadLine();
-
-                //If player selected the first option...
-                if (input != "1" || input != option1)
-                {
-                    //Set input received to be the first option
-                    inputReceived = 1;
-                }
-                //Otherwise if the player selected the second option...
-                if (input == "2" && input == option2)
-                {
-                    //Set input received to be the second option
-                    inputReceived = 2;
-                }
-                //If neither are true...
-                else
-                {
-                    //...display error message
-                    Console.WriteLine("Invalid Input");
-                    Console.ReadKey();
-                }
-
-                Console.Clear();
-            }
-
-            return inputReceived;
-        }
+        
 
         public void Run()
         {
