@@ -20,21 +20,21 @@ namespace HelloDungeon
         void Room1()
         {
             //Get the name from the player
-            Console.Write("Please enter your name.");
+            Console.WriteLine("Please enter your name.");
             characterName = Console.ReadLine();
             Console.WriteLine("Hello, " + characterName);
+            Console.WriteLine("press any key to continue");
+            Console.ReadKey(true);
 
             Console.Clear();
 
-            //Display text for the first encounter, and store the players decision
-            Console.WriteLine("You've been approached by a traveler!! " +
-                "\n They offer you a potion. Do you accept?","1. No", "2. Yes" );
-            Console.Write("-> ");
-            input = Console.ReadLine();
+            
 
             //If the player drinks the potion...
-            while (input != "1" && input != "No" && input != "2" && input != "Yes")
-            {
+
+            //Display text for the first encounter, and store the players decision
+            GetInput("You have been approached by a traveler!! They offer you a potion. Do you Drink it?", " No", " Yes");
+
                 if (input == "2" || input == "Yes")
                 {
                     //...kill the player
@@ -52,7 +52,6 @@ namespace HelloDungeon
                     Console.WriteLine("You decide to follow your gut and decline. You move on to the next area.");
                     Console.WriteLine("press any key to continue");
                     Console.ReadKey(true);
-                    currentArea = 2;
                 }
                 else
                 {
@@ -60,8 +59,8 @@ namespace HelloDungeon
                     Console.WriteLine("press any key to continue");
                     Console.ReadKey(true);
                 }
-            }
         }
+        
 
         /// <summary>
         /// The second room where the player is given a riddle to solve.
@@ -69,74 +68,79 @@ namespace HelloDungeon
         void Room2()
         {
             int numberOfAttempts = 4;
-            input = "";
-
             //Loop until the player gets the riddle right or they run out of tries
-            for (int i = 0; i < numberOfAttempts; i--)
-
-            //Draws monkey character 
-            Console.WriteLine("     __\n" +
-                               "w  c(..)o   (\n" +
-                               " \\__(-)   __)\n" +
-                               "    /|   (\n" +
-                               "   /(_)___)\n" +
-                               "  w /|\n" +
-                               "   \\  \n" +
-                               "    m m");
-
-            //Prints a description of the situation for context
-            Console.WriteLine("A very old man with a monkey on his back approaches you." +
-            "\n The monkey offers you immortality if you can solve a riddle in " + numberOfAttempts + " attempts.");
-            Console.WriteLine("What has to be broken before you can use it?");
-
-            //Store the amount of attempts the player has remaining
-            int attemptsRemaining = numberOfAttempts + i;
-
-            //Displays the remaining number of attempts
-            Console.WriteLine("Attempts Remaining: " + attemptsRemaining);
-
-            //Get input for the players guess
-            Console.Write("> ");
-            input = Console.ReadLine();
-
-            //If the player answered correctly...
-            if (input == "egg")
+            for (int i = 0; i <= numberOfAttempts; i--)
             {
-                //...print text for feedback and break the loop
-                Console.WriteLine("Congrats! You've gained immortality!");
-                Console.WriteLine("press any key to continue");
-                Console.ReadKey();
-            }
-            else
-            {
-                //If the player doesn't answer correctly deal damage to them
-                Console.WriteLine("Incorrect! The monkey laughs at you! It hurts..." +
-                    "you take 5 points of damage.");
-                Console.WriteLine("press any key to continue");
-                Console.ReadKey(true);
-                health -= 5;
-            }
-
-            //If the player has died after guessing
-            if (health <= 0)
-            {
-                //...update the player state and print player feedback to the screen
-                
-                Console.WriteLine("You died...");
-                Console.ReadKey(true);
-                playerIsAlive = false;
                 Console.Clear();
+                input = "";
+                //Draws monkey character 
+                Console.WriteLine("     __\n" +
+                                   "w  c(..)o   (\n" +
+                                   " \\__(-)   __)\n" +
+                                   "    /|   (\n" +
+                                   "   /(_)___)\n" +
+                                   "  w /|\n" +
+                                   "   \\  \n" +
+                                   "    m m");
+
+                //Prints a description of the situation for context
+                Console.WriteLine("A very old man with a monkey on his back approaches you." +
+                "\n The monkey offers you immortality if you can solve a riddle in " + numberOfAttempts + " attempts.");
+                Console.WriteLine("What has to be broken before you can use it?");
+                Console.WriteLine("press any key to continue");
+                Console.ReadKey(true);
+
+                //Store the amount of attempts the player has remaining
+                int attemptsRemaining = numberOfAttempts;
+
+                //Displays the remaining number of attempts
+                Console.WriteLine("Attempts Remaining: " + attemptsRemaining);
+
+                //Get input for the players guess
+                Console.Write("> ");
+                input = Console.ReadLine();
+
+                //If the player answered correctly...
+                if (input == "egg")
+                {
+                    //...print text for feedback and break the loop
+                    Console.WriteLine("Congrats! You've gained immortality!");
+                    Console.WriteLine("press any key to continue");
+                    Console.ReadKey();
+                    return;
+                }
+                else
+                {
+                    //If the player doesn't answer correctly deal damage to them
+                    Console.WriteLine("Incorrect! The monkey laughs at you! It hurts..." +
+                        "you lose 1 attempt.");
+                    Console.WriteLine("press any key to continue");
+                    Console.ReadKey(true);
+                    numberOfAttempts -= 1;
+                }
+
+                //If the player has died after guessing
+                if (attemptsRemaining <= 0)
+                {
+                    //...update the player state and print player feedback to the screen
+
+                    Console.WriteLine("You died...");
+                    Console.ReadKey(true);
+                    playerIsAlive = false;
+                    return;
+                }
             }
+
+            
         }
 
         void GetInput(string description, string option1, string option2)
         {
-            string input = "";
-            
 
             //While input is not 1 or 2 display the options
             while (input != "1" && input != "2")
             {
+                
                 //Print options
                 Console.WriteLine(description);
                 Console.WriteLine("1. " + option1);
@@ -153,6 +157,7 @@ namespace HelloDungeon
                     Console.WriteLine("Invalid Input");
                     Console.WriteLine("press any key to continue");
                     Console.ReadKey(true);
+                    input = "";
                 }
 
                 Console.Clear();
@@ -215,27 +220,28 @@ namespace HelloDungeon
                 {
                     Room1();
                 }
-                if (currentArea == 2)
+                else if (currentArea == 2)
                 {
                     Room2();
                 }
-                if (currentArea == 3)
+                else if (currentArea == 3)
                 {
                     Room3();
                 }
+                //If the player lost or beat the game...
+                if (playerIsAlive == false || currentArea == 4)
+                {
+                    //...print main menu
+                    DisplayMainMenu();
+                }
+                //Otherwise if the player is alive and hasn't finished...
+                else
+                {
+                    //...increment the current area
+                    currentArea++;
+                }
             }
-            //If the player lost or beat the game...
-            if (playerIsAlive == false || currentArea == 3)
-            {
-                //...print main menu
-                DisplayMainMenu();
-            }
-            //Otherwise if the player is alive and hasn't finished...
-            else
-            {
-                //...increment the current area
-                currentArea++;
-            }
+            
 
         }
     }
